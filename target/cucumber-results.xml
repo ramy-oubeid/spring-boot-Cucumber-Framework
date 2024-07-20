@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testsuite errors="0" failures="0" name="io.cucumber.core.plugin.JUnitFormatter" skipped="0" tests="1" time="3.464">
+    <testcase classname="SOAP Request and Response" name="Sending SOAP request and receiving response" time="0.863">
+        <system-out><![CDATA[Given I have a SOAP request.................................................passed
+When I send the SOAP request to the server..................................passed
+Then I should get a valid SOAP response.....................................passed
+And the response should contain the country names and ISO codes.............passed
+]]></system-out>
+    </testcase>
+</testsuite>
