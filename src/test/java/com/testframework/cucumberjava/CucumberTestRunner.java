@@ -2,7 +2,12 @@ package com.testframework.cucumberjava;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.aventstack.extentreports.reporter.configuration.Theme;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
@@ -10,14 +15,34 @@ import org.junit.runner.RunWith;
         glue = "com.testframework.cucumberjava.steps",
         plugin = {
                 "pretty",
-                "html:target/cucumber-reports", // Existing HTML report
-                "html:target/extra-cucumber-reports", // Extra HTML report
+                "html:target/cucumber-reports",
+                "html:target/extra-cucumber-reports",
                 "json:target/cucumber.json",
-                "junit:target/cucumber-results.xml"
+                "junit:target/cucumber-results.xml",
+                "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
         },
         monochrome = true,
-        tags = "@soapTest" // Run only the SOAP tests
+        tags = "@soapTest"
 )
 public class CucumberTestRunner {
-}
+        private static ExtentReports extent;
 
+        @BeforeClass
+        public static void setup() {
+                ExtentSparkReporter sparkReporter = new ExtentSparkReporter("target/extent-reports/extentReport.html");
+                sparkReporter.config().setTheme(Theme.STANDARD);
+                sparkReporter.config().setDocumentTitle("Extent Report for Cucumber Tests");
+                sparkReporter.config().setEncoding("utf-8");
+                sparkReporter.config().setReportName("Cucumber Test Execution Report");
+
+                extent = new ExtentReports();
+                extent.attachReporter(sparkReporter);
+        }
+
+        @AfterClass
+        public static void tearDown() {
+                if (extent != null) {
+                        extent.flush();
+                }
+        }
+}
