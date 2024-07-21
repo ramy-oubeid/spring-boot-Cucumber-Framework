@@ -1,10 +1,12 @@
 package com.testframework.cucumberjava.steps;
 
+import com.testframework.cucumberjava.utils.ExtentTestNGITestListener;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testng.annotations.Listeners;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.testng.Assert;
@@ -16,7 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-
+@Listeners(ExtentTestNGITestListener.class)
 public class SoapRequestSteps {
 
     private String soapRequest;

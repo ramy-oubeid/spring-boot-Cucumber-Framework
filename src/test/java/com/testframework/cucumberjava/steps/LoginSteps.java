@@ -1,5 +1,6 @@
 package com.testframework.cucumberjava.steps;
 
+import com.testframework.cucumberjava.utils.ExtentTestNGITestListener;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
@@ -11,8 +12,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testng.annotations.Listeners;
 
-
+@Listeners(ExtentTestNGITestListener.class)
 public class LoginSteps {
 
     private WebDriver driver;
