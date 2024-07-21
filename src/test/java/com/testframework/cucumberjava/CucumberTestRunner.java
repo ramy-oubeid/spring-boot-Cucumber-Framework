@@ -19,6 +19,7 @@ import com.aventstack.extentreports.reporter.configuration.Theme;
                 "html:target/extra-cucumber-reports",
                 "json:target/cucumber.json",
                 "junit:target/cucumber-results.xml",
+                "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
         },
         monochrome = true,
