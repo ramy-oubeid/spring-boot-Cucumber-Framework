@@ -17,7 +17,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 @Listeners(ExtentTestNGITestListener.class)
-public class SoapRequestSteps {
+public class SoapSteps {
 
     private String soapRequest;
     private String soapResponse;
@@ -37,7 +37,7 @@ public class SoapRequestSteps {
 
     @When("I send the SOAP request to the server")
     public void i_send_the_soap_request_to_the_server() throws Exception {
-        URL url = new URL("http://www.oorsprong.org/websamples.countryinfo/CountryInfoService.wso");
+        URL url = new URL("http://www.oorsprong.org/websamples.countryinfo/CountryInfoService.wso/ListOfCountryNamesByName");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
         connection.setDoInput(true);
