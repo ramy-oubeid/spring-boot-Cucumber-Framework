@@ -1,17 +1,15 @@
 package com.testframework.cucumberjava.steps;
 
-import com.testframework.cucumberjava.utils.ExtentTestNGITestListener;
+import com.testframework.cucumberjava.listener.ExtentTestNGITestListener;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import io.cucumber.spring.CucumberContextConfiguration;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.testng.annotations.Listeners;
 
 @Listeners(ExtentTestNGITestListener.class)
