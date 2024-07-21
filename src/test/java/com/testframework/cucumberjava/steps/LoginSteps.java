@@ -5,16 +5,14 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.Assert;
+import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@CucumberContextConfiguration
-@SpringBootTest
+
 public class LoginSteps {
 
     private WebDriver driver;
@@ -23,7 +21,6 @@ public class LoginSteps {
     public void i_am_on_the_amazon_login_page() {
         // Setup WebDriverManager to manage Edge driver
         WebDriverManager.edgedriver().setup();
-
 
         // Initialize the Edge driver
         driver = new EdgeDriver();
