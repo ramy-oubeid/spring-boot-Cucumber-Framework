@@ -1,4 +1,4 @@
-package com.testframework.cucumberjava;
+package com.testframework.cucumberjava.runner;
 
 import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
