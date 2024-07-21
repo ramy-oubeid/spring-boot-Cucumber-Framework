@@ -3,9 +3,11 @@ package com.testframework.cucumberjava.steps;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
+import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.testng.Assert;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,10 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-@SpringBootTest
 public class SoapRequestSteps {
 
     private String soapRequest;
@@ -48,7 +47,7 @@ public class SoapRequestSteps {
         connection.getOutputStream().write(soapRequest.getBytes(StandardCharsets.UTF_8));
 
         int responseCode = connection.getResponseCode();
-        assertEquals(200, responseCode);
+        Assert.assertEquals(responseCode, 200);
 
         byte[] responseBytes = connection.getInputStream().readAllBytes();
         soapResponse = new String(responseBytes, StandardCharsets.UTF_8);
@@ -56,8 +55,8 @@ public class SoapRequestSteps {
 
     @Then("I should get a valid SOAP response")
     public void i_should_get_a_valid_soap_response() throws Exception {
-        assertTrue(soapResponse.contains("<soap:Envelope"));
-        assertTrue(soapResponse.contains("<soap:Body"));
+        Assert.assertTrue(soapResponse.contains("<soap:Envelope"));
+        Assert.assertTrue(soapResponse.contains("<soap:Body"));
     }
 
     @Then("the response should contain the country names and ISO codes")
@@ -67,23 +66,24 @@ public class SoapRequestSteps {
         Document doc = builder.parse(new ByteArrayInputStream(soapResponse.getBytes(StandardCharsets.UTF_8)));
 
         NodeList countryNodes = doc.getElementsByTagName("m:tCountryCodeAndName");
-        assertTrue(countryNodes.getLength() > 0);
+        Assert.assertTrue(countryNodes.getLength() > 0);
 
         for (int i = 0; i < countryNodes.getLength(); i++) {
             NodeList childNodes = countryNodes.item(i).getChildNodes();
             String isoCode = null;
             String name = null;
             for (int j = 0; j < childNodes.getLength(); j++) {
-                if (childNodes.item(j).getNodeName().equals("m:sISOCode")) {
+                if ("m:sISOCode".equals(childNodes.item(j).getNodeName())) {
                     isoCode = childNodes.item(j).getTextContent();
                 }
-                if (childNodes.item(j).getNodeName().equals("m:sName")) {
+                if ("m:sName".equals(childNodes.item(j).getNodeName())) {
                     name = childNodes.item(j).getTextContent();
                 }
             }
-            assertTrue(isoCode != null && !isoCode.isEmpty());
-            assertTrue(name != null && !name.isEmpty());
+            Assert.assertNotNull(isoCode);
+            Assert.assertFalse(isoCode.isEmpty());
+            Assert.assertNotNull(name);
+            Assert.assertFalse(name.isEmpty());
         }
     }
 }
-
