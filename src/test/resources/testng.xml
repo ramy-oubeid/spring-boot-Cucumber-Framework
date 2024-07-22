@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="methods" thread-count="4">
+    <listeners>
+        <listener class-name="com.testframework.cucumberjava.listener.CustomTestNGListener"/>
+    </listeners>
+    <test name="Test">
+        <classes>
+            <class name="com.testframework.cucumberjava.runner.CucumberTestRunner"/>
+        </classes>
+    </test>
+</suite>
