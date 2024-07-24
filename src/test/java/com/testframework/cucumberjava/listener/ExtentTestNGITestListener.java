@@ -1,5 +1,6 @@
 package com.testframework.cucumberjava.listener;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -11,6 +12,7 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter; // Updated imp
 public class ExtentTestNGITestListener implements ITestListener {
     private static ExtentReports extent = new ExtentReports();
     private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
+
 
     @Override
     public void onStart(ITestContext context) {

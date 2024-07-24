@@ -1,5 +1,7 @@
 package com.testframework.cucumberjava.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,28 +16,40 @@ import java.io.IOException;
 @Service
 public class WsdlParserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(WsdlParserService.class);
+
     public void parseWsdlAndGenerateTests(String wsdlPath, String outputDir) {
+        logger.info("***********WsdlParserService***********");
+        logger.info("Starting WSDL parsing and test generation for WSDL at: {}", wsdlPath);
         try {
             File wsdlFile = new File(wsdlPath);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(wsdlFile);
+            if (doc.getElementsByTagName("wsdl:operation").getLength() == 0) {
+                logger.error("The wsdl document is null!");
+                return;
+            }
+            logger.info("The wsdl document is being read: {}",doc.getElementsByTagName("wsdl:operation").getLength());
 
             NodeList operationNodes = doc.getElementsByTagName("wsdl:operation");
             for (int i = 0; i < operationNodes.getLength(); i++) {
                 Element operationElement = (Element) operationNodes.item(i);
                 String operationName = operationElement.getAttribute("name");
+                logger.info("Processing operation: {}", operationName);
 
                 generateStepDefinition(operationName, outputDir);
                 generateFeatureFile(operationName, outputDir);
                 generateTestNGRunner(operationName, outputDir);
             }
+            logger.info("WSDL parsing and test generation completed.");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("An error occurred while parsing the WSDL and generating tests", e);
         }
     }
 
     private void generateStepDefinition(String operationName, String outputDir) {
+        logger.info("Generating step definition for operation: {}", operationName);
         String stepDefinitionTemplate =
                 "package com.testframework.cucumberjava.generated.steps;\n\n" +
                         "import io.cucumber.java.en.When;\n" +
@@ -64,12 +78,14 @@ public class WsdlParserService {
 
         try (FileWriter writer = new FileWriter(outputDir + "/steps/" + operationName + "Steps.java")) {
             writer.write(stepDefinitionContent);
+            logger.info("Step definition file generated for operation: {}", operationName);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An error occurred while writing the step definition file for operation: {}", operationName, e);
         }
     }
 
     private void generateFeatureFile(String operationName, String outputDir) {
+        logger.info("Generating feature file for operation: {}", operationName);
         String featureTemplate =
                 "Feature: %s operation\n\n" +
                         "  Scenario: %s\n" +
@@ -81,12 +97,14 @@ public class WsdlParserService {
 
         try (FileWriter writer = new FileWriter(outputDir + "/features/" + operationName + ".feature")) {
             writer.write(featureContent);
+            logger.info("Feature file generated for operation: {}", operationName);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An error occurred while writing the feature file for operation: {}", operationName, e);
         }
     }
 
     private void generateTestNGRunner(String operationName, String outputDir) {
+        logger.info("Generating TestNG runner for operation: {}", operationName);
         String runnerTemplate =
                 "package com.testframework.cucumberjava.generated.runners;\n\n" +
                         "import io.cucumber.testng.AbstractTestNGCucumberTests;\n" +
@@ -124,9 +142,9 @@ public class WsdlParserService {
 
         try (FileWriter writer = new FileWriter(outputDir + "/runners/" + operationName + "TestNGRunner.java")) {
             writer.write(runnerContent);
+            logger.info("TestNG runner file generated for operation: {}", operationName);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An error occurred while writing the TestNG runner file for operation: {}", operationName, e);
         }
     }
 }
-

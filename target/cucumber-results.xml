@@ -1,21 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testsuite errors="0" failures="1" name="io.cucumber.core.plugin.JUnitFormatter" skipped="0" tests="1" time="3.807">
-    <testcase classname="SOAP Request and Response" name="Sending SOAP request and receiving response" time="0.525">
-        <failure message="expected [200] but found [415]" type="java.lang.AssertionError"><![CDATA[Given I have a SOAP request.................................................passed
-When I send the SOAP request to the server..................................failed
-Then I should get a valid SOAP response.....................................skipped
-And the response should contain the country names and ISO codes.............skipped
-
-StackTrace:
-java.lang.AssertionError: expected [200] but found [415]
-	at org.testng.Assert.fail(Assert.java:99)
-	at org.testng.Assert.failNotEquals(Assert.java:1037)
-	at org.testng.Assert.assertEqualsImpl(Assert.java:140)
-	at org.testng.Assert.assertEquals(Assert.java:122)
-	at org.testng.Assert.assertEquals(Assert.java:907)
-	at org.testng.Assert.assertEquals(Assert.java:917)
-	at com.testframework.cucumberjava.steps.SoapSteps.i_send_the_soap_request_to_the_server(SoapSteps.java:50)
-	at ✽.I send the SOAP request to the server(file:///C:/Users/ROUBEID/Documents/nodejs/cucumberjava/src/test/resources/features/soap_request.feature:6)
-]]></failure>
-    </testcase>
-</testsuite>
+<testsuite errors="0" failures="0" name="io.cucumber.core.plugin.JUnitFormatter" skipped="0" time="0.423"/>
