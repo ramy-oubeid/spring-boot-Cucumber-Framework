@@ -1,5 +1,6 @@
 package com.testframework.cucumberjava.runner;
 
+import com.testframework.cucumberjava.steps.WsdlParserRunner;
 import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 import org.testng.annotations.AfterClass;
@@ -24,24 +25,37 @@ import com.aventstack.extentreports.reporter.configuration.Theme;
         tags = "@soapTest"
 )
 public class CucumberTestRunner extends AbstractTestNGCucumberTests {
-        private static ExtentReports extent;
+    private static ExtentReports extent;
 
-        @BeforeClass
-        public void setup() {
-                ExtentSparkReporter sparkReporter = new ExtentSparkReporter("target/extent-reports/extentReport.html");
-                sparkReporter.config().setTheme(Theme.STANDARD);
-                sparkReporter.config().setDocumentTitle("Extent Report for Cucumber Tests");
-                sparkReporter.config().setEncoding("utf-8");
-                sparkReporter.config().setReportName("Cucumber Test Execution Report");
+    private WsdlParserRunner wsdlParserRunner;
 
-                extent = new ExtentReports();
-                extent.attachReporter(sparkReporter);
+    // No-argument constructor
+    public CucumberTestRunner() {
+        super();
+    }
+
+    // Existing constructor
+    public CucumberTestRunner(WsdlParserRunner wsdlParserRunner) {
+        this.wsdlParserRunner = wsdlParserRunner;
+    }
+
+    @BeforeClass
+    public void setup() throws Exception {
+        // Initialize wsdlParserRunner here if necessary
+        ExtentSparkReporter sparkReporter = new ExtentSparkReporter("target/extent-reports/extentReport.html");
+        sparkReporter.config().setTheme(Theme.STANDARD);
+        sparkReporter.config().setDocumentTitle("Extent Report for Cucumber Tests");
+        sparkReporter.config().setEncoding("utf-8");
+        sparkReporter.config().setReportName("Cucumber Test Execution Report");
+
+        extent = new ExtentReports();
+        extent.attachReporter(sparkReporter);
+    }
+
+    @AfterClass
+    public void tearDown() {
+        if (extent != null) {
+            extent.flush();
         }
-
-        @AfterClass
-        public void tearDown() {
-                if (extent != null) {
-                        extent.flush();
-                }
-        }
+    }
 }
