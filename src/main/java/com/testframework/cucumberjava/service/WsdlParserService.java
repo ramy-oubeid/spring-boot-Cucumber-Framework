@@ -24,23 +24,32 @@ public class WsdlParserService {
         try {
             File wsdlFile = new File(wsdlPath);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(wsdlFile);
-            if (doc.getElementsByTagName("wsdl:operation").getLength() == 0) {
-                logger.error("The wsdl document is null!");
+
+            doc.getDocumentElement().normalize();
+
+            NodeList portTypeNodes = doc.getElementsByTagNameNS("*", "portType");
+            if (portTypeNodes.getLength() == 0) {
+                logger.error("The WSDL document does not contain any portType elements!");
                 return;
             }
-            logger.info("The wsdl document is being read: {}",doc.getElementsByTagName("wsdl:operation").getLength());
 
-            NodeList operationNodes = doc.getElementsByTagName("wsdl:operation");
-            for (int i = 0; i < operationNodes.getLength(); i++) {
-                Element operationElement = (Element) operationNodes.item(i);
-                String operationName = operationElement.getAttribute("name");
-                logger.info("Processing operation: {}", operationName);
+            logger.info("The WSDL document is being read: {} portType elements found", portTypeNodes.getLength());
 
-                generateStepDefinition(operationName, outputDir);
-                generateFeatureFile(operationName, outputDir);
-                generateTestNGRunner(operationName, outputDir);
+            for (int i = 0; i < portTypeNodes.getLength(); i++) {
+                Element portTypeElement = (Element) portTypeNodes.item(i);
+                NodeList operationNodes = portTypeElement.getElementsByTagNameNS("*", "operation");
+                for (int j = 0; j < operationNodes.getLength(); j++) {
+                    Element operationElement = (Element) operationNodes.item(j);
+                    String operationName = operationElement.getAttribute("name");
+                    logger.info("Processing operation: {}", operationName);
+
+                    generateStepDefinition(operationName, outputDir);
+                    generateFeatureFile(operationName, outputDir);
+                    generateTestNGRunner(operationName, outputDir);
+                }
             }
             logger.info("WSDL parsing and test generation completed.");
         } catch (Exception e) {
@@ -76,9 +85,15 @@ public class WsdlParserService {
 
         String stepDefinitionContent = String.format(stepDefinitionTemplate, operationName, operationName, operationName, operationName, operationName);
 
-        try (FileWriter writer = new FileWriter(outputDir + "/steps/" + operationName + "Steps.java")) {
-            writer.write(stepDefinitionContent);
-            logger.info("Step definition file generated for operation: {}", operationName);
+        try {
+            File stepsDir = new File(outputDir + "/steps/");
+            if (!stepsDir.exists()) {
+                stepsDir.mkdirs();
+            }
+            try (FileWriter writer = new FileWriter(stepsDir + "/" + operationName + "Steps.java")) {
+                writer.write(stepDefinitionContent);
+                logger.info("Step definition file generated for operation: {}", operationName);
+            }
         } catch (IOException e) {
             logger.error("An error occurred while writing the step definition file for operation: {}", operationName, e);
         }
@@ -95,9 +110,15 @@ public class WsdlParserService {
 
         String featureContent = String.format(featureTemplate, operationName, operationName, operationName, operationName);
 
-        try (FileWriter writer = new FileWriter(outputDir + "/features/" + operationName + ".feature")) {
-            writer.write(featureContent);
-            logger.info("Feature file generated for operation: {}", operationName);
+        try {
+            File featuresDir = new File(outputDir + "/features/");
+            if (!featuresDir.exists()) {
+                featuresDir.mkdirs();
+            }
+            try (FileWriter writer = new FileWriter(featuresDir + "/" + operationName + ".feature")) {
+                writer.write(featureContent);
+                logger.info("Feature file generated for operation: {}", operationName);
+            }
         } catch (IOException e) {
             logger.error("An error occurred while writing the feature file for operation: {}", operationName, e);
         }
@@ -140,9 +161,15 @@ public class WsdlParserService {
 
         String runnerContent = String.format(runnerTemplate, operationName, operationName);
 
-        try (FileWriter writer = new FileWriter(outputDir + "/runners/" + operationName + "TestNGRunner.java")) {
-            writer.write(runnerContent);
-            logger.info("TestNG runner file generated for operation: {}", operationName);
+        try {
+            File runnersDir = new File(outputDir + "/runners/");
+            if (!runnersDir.exists()) {
+                runnersDir.mkdirs();
+            }
+            try (FileWriter writer = new FileWriter(runnersDir + "/" + operationName + "TestNGRunner.java")) {
+                writer.write(runnerContent);
+                logger.info("TestNG runner file generated for operation: {}", operationName);
+            }
         } catch (IOException e) {
             logger.error("An error occurred while writing the TestNG runner file for operation: {}", operationName, e);
         }
